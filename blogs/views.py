@@ -53,7 +53,7 @@ class BlogListView(APIView):
     
     def get(self, request):
         paginator = PageNumberPagination()
-        paginator.page_size = 10  # Number of blogs per page
+        paginator.page_size = 10 
         blogs = Blog.objects.all()
         filtered_blogs = self.filter_queryset(blogs)
         result_page = paginator.paginate_queryset(filtered_blogs, request)
