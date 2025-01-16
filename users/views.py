@@ -4,13 +4,13 @@ from users.models import User
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-# Create your views here.
+
 class usersDetails(APIView):
 
     def get_permissions(self):
         if self.request.method == 'POST':
             return [AllowAny()]
-        return [AllowAny()]
+        return [IsAuthenticated()]
     def get(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user)
