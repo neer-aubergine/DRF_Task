@@ -25,7 +25,7 @@ class usersDetails(APIView):
             return Response(serializer.data)
         return Response(serializer.errors)
     def put(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
+        user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             if 'password' in request.data:
