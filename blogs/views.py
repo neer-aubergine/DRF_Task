@@ -8,6 +8,7 @@ from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework.pagination import PageNumberPagination
 from .filters import BlogFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 
 class BlogDetails(APIView):
     def get_permissions(self):
@@ -44,8 +45,10 @@ class BlogDetails(APIView):
         return Response({"message" : "blog deleted successfully"} , status=204)
     
 class BlogListView(APIView):
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend , SearchFilter]
     filterset_class = BlogFilter
+    search_fields = ['title', 'content', 'author__username', 'category__name', 'tags__name']
+
     def get_permissions(self):
         if self.request.method == 'GET':
             return [AllowAny()]
@@ -61,7 +64,7 @@ class BlogListView(APIView):
         return paginator.get_paginated_response(serializer.data)
     
     def filter_queryset(self, queryset):
-        filter_backends = [DjangoFilterBackend]
+        filter_backends = [DjangoFilterBackend , SearchFilter]
         for backend in list(filter_backends):
             queryset = backend().filter_queryset(self.request, queryset, self)
         return queryset
